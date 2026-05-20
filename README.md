@@ -77,8 +77,8 @@ Todas las llamadas externas del cliente se unifican a través del API Gateway (h
   * `GET /api/v1/locales/listado/{id}` - Busca una sucursal y la expone formateada mediante su DTO estructurado.
 * **Métodos y Consultas Personalizadas:**
   * `GET /api/v1/locales/comuna/{comuna}` - Filtra los restaurantes basándose en la comuna a la que pertenecen.
-  * `GET /api/v1/locales/direccion/{direccion}` - Busca coincidencias exactas por la dirección física del establecimiento.
-
+  * `GET /api/v1/locales/gerente-id/{id}` - Busca coincidencias exactas por el id del gerente.
+  * `GET /api/v1/locales/gerente-tipo/{tipo}` - Busca coincidencias exactas por el tipo de gerente.
 
 ### 2. Servicio de Empleados (`/api/v1/empleados`)
 * **Métodos CRUD:**
@@ -91,7 +91,7 @@ Todas las llamadas externas del cliente se unifican a través del API Gateway (h
   * `GET /api/v1/empleados/listado` - Retorna el listado de empleados en formato `EmpleadoDTO`, integrando datos síncronos del local remoto consumidos mediante `OpenFeign`.
   * `GET /api/v1/empleados/listado/{id}` - Expone la vista limpia DTO de un empleado incluyendo la información consolidada de su sucursal de destino.
 * **Métodos y Consultas Personalizadas:**
-  * `GET /api/v1/empleados/email/{email}` - Localiza un operario mediante coincidencia exacta de su dirección de correo electrónico.
+  * `GET /api/v1/empleados/email/{email}` - Localiza un operario mediante coincidencia exacta de su dirección de correo electrónico (`.cl`, `.com`, `.net`).
   * `GET /api/v1/empleados/salario-mayor/{salario}` - Filtra el personal cuyos sueldos base superen la cifra dada.
   * `GET /api/v1/empleados/salario-menor/{salario}` - Filtra el personal cuyos sueldos base sean inferiores a la cifra dada.
   * `GET /api/v1/empleados/local/{local}` - Extrae y agrupa la nómina completa de trabajadores pertenecientes a una sucursal específica.
@@ -125,7 +125,7 @@ Todas las llamadas externas del cliente se unifican a través del API Gateway (h
   * `GET /api/v1/proveedores/listado/{id}` - Entrega los datos formateados de un proveedor individual a través de su DTO.
 * **Métodos y Consultas Personalizadas:**
   * `GET /api/v1/proveedores/email/{email}` - Busca una entidad por correspondencia de su e-mail corporativo.
-  * `GET /api/v1/proveedores/fono/{fono}` - Localiza el proveedor mediante coincidencia de su línea telefónica registrada.
+  * `GET /api/v1/proveedores/tipo-proveedor/{tipo}` - Lista a los proveedores por los uno de los 3 tipos (`Alimentos`,`Limpieza`,`Maquinaria`).
   * `GET /api/v1/proveedores/region/{region}` - Filtra proveedores buscando por coincidencia de la región.
 
 ### 5. Servicio de Inventarios (`/api/v1/inventarios`)
@@ -142,6 +142,8 @@ Todas las llamadas externas del cliente se unifican a través del API Gateway (h
   * `GET /api/v1/inventarios/local/{local}` - Extrae de manera exclusiva las existencias pertenecientes a un ID de sucursal determinado.
   * `GET /api/v1/inventarios/cantidad-menor/{cantidad}` - Alerta de stock crítico filtrando insumos con cantidades inferiores o iguales al límite dado.
   * `GET /api/v1/inventarios/cantidad-mayor/{cantidad}` - Filtra lotes con abundancia de existencias superiores o iguales al valor enviado.
+  * `GET /api/v1/inventarios/proveedor/{proveedor}` - Filtra los lotes dados por el ID del proveedor determinado.
+
 
 ### 6. Servicio de Menús (`/api/v1/menus`)
 * **Métodos CRUD:**
@@ -154,25 +156,19 @@ Todas las llamadas externas del cliente se unifican a través del API Gateway (h
   * `GET /api/v1/menus/listado` - Retorna las minutas mapeadas a `MenuDTO` resolviendo los datos cruzados distribuidos del local.
   * `GET /api/v1/menus/listado/{id}` - Expone el DTO estructurado de un ítem del menú de forma individual.
 * **Métodos y Consultas Personalizadas:**
-  * `GET /api/v1/menus/local/{local}` - Extrae la carta de minutas vigente configurada de forma exclusiva para una sucursal determinada.
-  * `GET /api/v1/menus/precio-menor/{precio}` - Filtra la oferta de platos cuyos precios al cliente sean menores o iguales al monto.
-  * `GET /api/v1/menus/precio-mayor/{precio}` - Filtra la oferta de platos cuyos precios al cliente superen o igualen el monto.
-  * `GET /api/v1/menus/categoria/{categoria}` - Agrupa las minutas asociadas a un código o identificador de categoría gastronómica.
+  * `GET /api/v1/menus/local/{id}` - Extrae la carta de minutas vigente configurada de forma exclusiva para una sucursal determinada por su ID.
+  * `GET /api/v1/menus/precio-menor/{precio}` - Filtra la oferta de platos cuyos precios sean menores o iguales al monto.
+  * `GET /api/v1/menus/precio-mayor/{precio}` - Filtra la oferta de platos cuyos precios superen o igualen el monto.
+  * `GET /api/v1/menus/categoria/{codigo}` - Agrupa las minutas asociadas a un código de categoría gastronómica.
 
 ### 7. Servicio de Categorías (`/api/v1/categorias`)
 *(Este componente opera como un nanoservicio integrado dentro de la frontera lógica del servicio de menús)*
 * **Métodos CRUD:**
   * `GET /api/v1/categorias` - Muestra todas las clasificaciones gastronómicas activas.
-  * `GET /api/v1/categorias/{codigo}` - Localiza una categoría mediante su código alfanumérico único (No permite indexación por IDs numéricos convencionales).
+  * `GET /api/v1/categorias/{codigo}` - Localiza una categoría mediante su código alfanumérico único (No permite indexación ni búsquedas mediante IDs numéricos convencionales)..
   * `POST /api/v1/categorias` - Registra una nueva categoría validando que el Código y el Nombre sean estrictamente únicos.
   * `PUT /api/v1/categorias/{codigo}` - Modifica los parámetros de una categoría localizándola mediante su código alfanumérico único.
   * `DELETE /api/v1/categorias/{codigo}` - Remueve una categoría del sistema utilizando su código alfanumérico único.
-* **Métodos de Transferencia de Datos (DTO):**
-  * `GET /api/v1/categorias/listado` - Entrega las clasificaciones formateadas a través de `CategoriaDTO`.
-  * `GET /api/v1/categorias/listado/{codigo}` - Retorna el DTO de una categoría específica localizándola por su código único.
-* **Métodos y Consultas Personalizadas:**
-  * `GET /api/v1/categorias/codigo/{codigo}` - Consulta exacta de metadatos de categoría a través de su código único.
-  * `GET /api/v1/categorias/nombre/{nombre}` - Localiza clasificaciones mediante la coincidencia exacta de su nombre descriptivo.
 
 ### 8. Servicio de Equipos (`/api/v1/equipos`)
 * **Métodos CRUD:**
@@ -197,12 +193,6 @@ Todas las llamadas externas del cliente se unifican a través del API Gateway (h
   * `POST /api/v1/marcas` - Registra una marca validando que su Código y Nombre sean únicos a nivel de plataforma.
   * `PUT /api/v1/marcas/{codigo}` - Modifica los metadatos de una marca localizándola mediante su código alfanumérico único.
   * `DELETE /api/v1/marcas/{codigo}` - Remueve la marca utilizando su código alfanumérico único.
-* **Métodos de Transferencia de Datos (DTO):**
-  * `GET /api/v1/marcas/listado` - Entrega las marcas formateadas a respuestas limpias en formato `MarcaDTO`.
-  * `GET /api/v1/marcas/listado/{codigo}` - Retorna el DTO de una marca específica localizándola por su código único.
-* **Métodos y Consultas Personalizadas:**
-  * `GET /api/v1/marcas/codigo/{codigo}` - Consulta exacta de metadatos de una marca a través de su código único.
-  * `GET /api/v1/marcas/nombre/{nombre}` - Localiza marcas de maquinaria mediante la coincidencia exacta de su nombre registrado.
 
 ### 10. Servicio de Ventas (`/api/v1/ventas`)
 * **Métodos CRUD:**
@@ -216,6 +206,6 @@ Todas las llamadas externas del cliente se unifican a través del API Gateway (h
   * `GET /api/v1/ventas/listado/{id}` - Expone el DTO estructurado consolidado de una venta diaria individual.
 * **Métodos y Consultas Personalizadas (Reportes Especializados):**
   * `GET /api/v1/ventas/local/{local}` - Filtra y consolida la totalidad de las ventas pertenecientes a un ID de local específico.
-  * `GET /api/v1/ventas/maxima-menor/{venta}` - Filtra reportes comerciales cuyas ventas máximas registradas sean inferiores o iguales al monto indicado.
-  * `GET /api/v1/ventas/minima-mayor/{venta}` - Filtra reportes comerciales cuyas ventas mínimas superen o igualen el parámetro provisto.
-  * `GET /api/v1/ventas/promedio-mayor/{venta}` - Filtra los balances consolidados cuyo rendimiento promedio de venta sea mayor o igual al valor ingresado.
+  * `GET /api/v1/ventas/venta-maxima-menor/{venta}` - Filtra reportes comerciales cuyas ventas máximas registradas sean inferiores o iguales al monto indicado.
+  * `GET /api/v1/ventas/venta-minima-mayor/{venta}` - Filtra reportes comerciales cuyas ventas mínimas superen o igualen el parámetro provisto.
+  * `GET /api/v1/ventas/venta-promedio-mayor/{venta}` - Filtra los balances consolidados cuyo rendimiento promedio de venta sea mayor o igual al valor ingresado.
