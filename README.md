@@ -39,9 +39,9 @@ CREATE DATABASE tf_bd_ventas;
 ```
 
 ### Paso 2: Orden Secuencial de Encendido de los Servicios
-Debido a que los microservicios operativos se inicializan en **puertos dinámicos aleatorios (`server.port=0`)** para permitir escalabilidad horizontal elástica, deben levantarse siguiendo estrictamente este orden:
+Debido a que los microservicios operativos se inicializan en **puertos dinámicos aleatorios (`server.port=0`)** para permitir escalabilidad horizontal elástica, se recomienda levantar siguiendo este orden:
 
-1. **`eureka-service`:** Servidor de Descubrimiento (Debe inicializarse primero para habilitar la escucha de registros).
+1. **`eureka-service`:** Servidor de Descubrimiento (Se inicializa primero para habilitar la escucha de registros).
 2. **`config-server`:** Servidor de Configuración (Debe estar listo antes de los módulos de dominio para inyectarles sus credenciales y propiedades).
 3. **Microservicios de Dominio (Orden Indiferente):**
    * `locales-service`
