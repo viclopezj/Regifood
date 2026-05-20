@@ -6,3 +6,5 @@ CREATE DATABASE tf_bd_locales;
 CREATE DATABASE tf_bd_menus;
 CREATE DATABASE tf_bd_proveedores;
 CREATE DATABASE tf_bd_ventas;
+
+https://gemini.google.com/share/ad12a5f09cfb
