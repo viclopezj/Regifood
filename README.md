@@ -22,6 +22,7 @@ A través de un enfoque basado en una **Arquitectura de Microservicios**, el eco
 
 ## Instrucciones de Instalación y Ejecución
 
+Hola que hace.
 Para desplegar localmente el ecosistema Regifood, siga rigurosamente los siguientes pasos secuenciales:
 
 ### Paso 1: Configuración de los Esquemas en MySQL
