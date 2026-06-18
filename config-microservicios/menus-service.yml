@@ -7,7 +7,7 @@ spring:
     name: menus-service
 
   datasource:
-    url: ${SPRING_DATASOURCE_URL:jdbc:mysql://localhost:3307/tf_bd_menus}
+    url: ${SPRING_DATASOURCE_URL:jdbc:mysql://localhost:3306/tf_bd_menus}
     username: ${SPRING_DATASOURCE_USERNAME:root}
     password: ${SPRING_DATASOURCE_PASSWORD:}
 

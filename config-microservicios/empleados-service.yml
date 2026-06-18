@@ -7,7 +7,7 @@ spring:
     name: empleados-service
 
   datasource:
-    url: ${SPRING_DATASOURCE_URL:jdbc:mysql://localhost:3307/tf_bd_empleados}
+    url: ${SPRING_DATASOURCE_URL:jdbc:mysql://localhost:3306/tf_bd_empleados}
     username: ${SPRING_DATASOURCE_USERNAME:root}
     password: ${SPRING_DATASOURCE_PASSWORD:}
 
